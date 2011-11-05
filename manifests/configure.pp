@@ -29,5 +29,13 @@ class fail2ban::configure {
 			mode => "640",
 			source => "puppet:///modules/fail2ban/filter.d/apache-w00tw00t.conf",
 	}
+	file {
+		"/etc/fail2ban/filter.d/apache-badreq.conf" :
+			ensure => present,
+			owner => root,
+			group => root,
+			mode => "640",
+			source => "puppet:///modules/fail2ban/filter.d/apache-badreq.conf",
+	}
 	Class['fail2ban::install'] -> Class['fail2ban::configure']
 }
