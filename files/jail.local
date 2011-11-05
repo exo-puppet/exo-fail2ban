@@ -87,8 +87,10 @@ maxretry = 2
 
 [apache-w00tw00t]
 enabled = true
+port    = http,https
 filter = apache-w00tw00t
 action = iptables[name=Apache-w00tw00t,port=80,protocol=tcp]
+action = iptables[name=Apache-w00tw00t,port=443,protocol=tcp]
 logpath = /var/log/apache*/*access*.log
 maxretry = 1
 
