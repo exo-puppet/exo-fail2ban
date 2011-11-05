@@ -69,6 +69,20 @@ filter	= apache-auth
 logpath = /var/log/apache*/*error*.log
 maxretry = 10 
 
+[apache-badbots]
+
+enabled  = true
+port     = http,https
+filter   = apache-badbots
+logpath = /var/log/apache*/*error*.log
+
+[apache-badreq]
+
+enabled  = true
+port     = http,https
+filter   = apache-badreq
+logpath = /var/log/apache*/*error*.log
+
 [apache-noscript]
 
 enabled = true
