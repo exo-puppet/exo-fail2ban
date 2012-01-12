@@ -13,9 +13,9 @@
 #       this variable allow to chose if the package should always be updated to the last available version (true) or not (false) (default: false)
 #
 #   [+ignoreip+]
-#       (OPTIONAL) (default: 127.0.0.1)
+#       (OPTIONAL) (default: ["127.0.0.1"])
 #       
-#       this variable can be an IP address, a CIDR mask or a DNS host and is used as exception by fail2ban. Hosts matching a value defined here cannnot be banned.  (default: 127.0.0.1)
+#       this variable can be an array of IP addresses, CIDR masks or DNS hosts and is used as exception by fail2ban. Hosts matching a value defined here cannnot be banned.  (default: ["127.0.0.1"])
 #
 # == Modules Dependencies
 #
@@ -32,7 +32,7 @@
 #   }
 #
 ################################################################################
-class fail2ban ( $lastversion = false, $ignoreip = "127.0.0.1" ) {
+class fail2ban ( $lastversion = false, $ignoreip = ["127.0.0.1"] ) {
     # parameters validation
     if ($lastversion != true) and ($lastversion != false) {
         fail("lastversion must be true or false")
