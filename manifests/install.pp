@@ -2,9 +2,10 @@
 #
 # This class manage the installation of the postfix package
 class fail2ban::install {
-    package { "fail2ban" :
-        name    => $fail2ban::params::package_name,
-        ensure  => $fail2ban::params::ensure_mode,
-        require => [ Exec ["repo-update"],],
-    }
+  package { 'fail2ban':
+    ensure  => $fail2ban::params::ensure_mode,
+    name    => $fail2ban::params::package_name,
+    require => [
+      Exec['repo-update'],],
+  }
 }
