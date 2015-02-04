@@ -6,7 +6,7 @@ class fail2ban::config {
     ensure  => directory,
     owner   => root,
     group   => root,
-    mode    => 0755,
+    mode    => '0755',
     require => Class['fail2ban::install'],
   }
 
@@ -14,7 +14,7 @@ class fail2ban::config {
     ensure  => present,
     owner   => 'root',
     group   => 'root',
-    mode    => 640,
+    mode    => '0640',
     content => template('fail2ban/jail.local.erb'),
     require => [
       Class['fail2ban::install'],
