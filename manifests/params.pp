@@ -9,13 +9,18 @@ class fail2ban::params {
   info("fail2ban ensure mode = ${ensure_mode}")
 
   case $::operatingsystem {
-    /(Ubuntu|Debian)/ : {
-      $package_name      = [
-        'fail2ban']
+    /(Ubuntu)/ : {
+      $package_name      = ['fail2ban']
       $service_name      = 'fail2ban'
       $configuration_dir = '/etc/fail2ban'
+
+      case $::lsbdistrelease {
+        /(12.04)/ : { $jail_template = 'jail.local.erb' }
+        /(14.04)/ : { $jail_template = 'jail.local-14.04.erb' }
+        default   : { fail("The ${module_name} module is not supported on ${::operatingsystem} version ${::lsbdistrelease}") }
+      }
     }
-    default           : {
+    default    : {
       fail("The ${module_name} module is not supported on ${::operatingsystem}")
     }
   }

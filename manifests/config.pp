@@ -15,7 +15,7 @@ class fail2ban::config {
     owner   => 'root',
     group   => 'root',
     mode    => '0640',
-    content => template('fail2ban/jail.local.erb'),
+    content => template("fail2ban/${fail2ban::params::jail_template}"),
     require => [
       Class['fail2ban::install'],
       File[$fail2ban::params::configuration_dir]],
