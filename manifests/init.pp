@@ -3,7 +3,9 @@
 #   This module manages the fail2ban service.
 #
 #   Tested platforms:
-#    - Ubuntu 11.04 Natty
+#    - Ubuntu 14.04
+#    - Ubuntu 12.04
+#    - Ubuntu 11.04
 #
 #
 # == Parameters

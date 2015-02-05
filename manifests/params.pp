@@ -15,7 +15,7 @@ class fail2ban::params {
       $configuration_dir = '/etc/fail2ban'
 
       case $::lsbdistrelease {
-        /(12.04)/ : { $jail_template = 'jail.local.erb' }
+        /(11.04|12.04)/ : { $jail_template = 'jail.local.erb' }
         /(14.04)/ : { $jail_template = 'jail.local-14.04.erb' }
         default   : { fail("The ${module_name} module is not supported on ${::operatingsystem} version ${::lsbdistrelease}") }
       }
