@@ -44,6 +44,6 @@ class fail2ban (
   if ($lastversion != true) and ($lastversion != false) {
     fail('lastversion must be true or false')
   }
-  include repo
+  include stdlib
   include fail2ban::params, fail2ban::install, fail2ban::config, fail2ban::service
 }
