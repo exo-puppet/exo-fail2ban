@@ -38,6 +38,7 @@
 ################################################################################
 class fail2ban (
   $lastversion = false,
+  $apache_installed = true,
   $ignoreip    = [
     '127.0.0.1']) {
   # parameters validation

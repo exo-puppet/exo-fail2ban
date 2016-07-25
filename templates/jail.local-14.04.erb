@@ -100,7 +100,7 @@ maxretry = 6
 
 [apache]
 
-enabled  = true
+enabled  = <%= scope['fail2ban::apache_installed'] %>
 port     = http,https
 filter   = apache-auth
 logpath  = /var/log/apache*/*error*.log
@@ -108,21 +108,21 @@ maxretry = 10
 
 [apache-badbots]
 
-enabled  = true
+enabled  = <%= scope['fail2ban::apache_installed'] %>
 port     = http,https
 filter   = apache-badbots
 logpath  = /var/log/apache*/*error*.log
 
 [apache-badreq]
 
-enabled  = true
+enabled  = <%= scope['fail2ban::apache_installed'] %>
 port     = http,https
 filter   = apache-badreq
 logpath  = /var/log/apache*/*error*.log
 
 [apache-noscript]
 
-enabled  = true
+enabled  = <%= scope['fail2ban::apache_installed'] %>
 port     = http,https
 filter   = apache-noscript
 logpath  = /var/log/apache*/*error*.log
@@ -130,7 +130,7 @@ maxretry = 6
 
 [apache-overflows]
 
-enabled  = true
+enabled  = <%= scope['fail2ban::apache_installed'] %>
 port     = http,https
 filter   = apache-overflows
 logpath  = /var/log/apache*/*error*.log
@@ -138,7 +138,7 @@ maxretry = 2
 
 [apache-w00tw00t]
 
-enabled  = true
+enabled  = <%= scope['fail2ban::apache_installed'] %>
 port     = http,https
 filter   = apache-w00tw00t
 action   = iptables[name=Apache-w00tw00t,port=80,protocol=tcp]
