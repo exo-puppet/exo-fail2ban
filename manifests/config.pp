@@ -10,16 +10,21 @@ class fail2ban::config {
     require => Class['fail2ban::install'],
   }
 
-  file { "${fail2ban::params::configuration_dir}/jail.local":
-    ensure  => present,
+  concat { "${fail2ban::params::configuration_dir}/jail.local":
+    ensure => present,
     owner   => 'root',
     group   => 'root',
     mode    => '0640',
-    content => template("fail2ban/${fail2ban::params::jail_template}"),
     require => [
       Class['fail2ban::install'],
       File[$fail2ban::params::configuration_dir]],
     notify  => Class['fail2ban::service'],
+  }
+
+  concat::fragment { 'global' :
+    target  => "${fail2ban::params::configuration_dir}/jail.local",
+    content => template("fail2ban/${fail2ban::params::jail_template}"),
+    order   => 0,
   }
 
   file { "${fail2ban::params::configuration_dir}/action.d":
