@@ -1,0 +1,190 @@
+# ###################################
+# This file is managed by puppet
+# PLEASE DON'T MODIFY BY HAND
+# ###################################
+# Fail2Ban configuration file.
+#
+
+[DEFAULT]
+
+# "ignoreip" can be an IP address, a CIDR mask or a DNS host. Fail2ban will not
+# ban a host which matches an address in this list. Several addresses can be
+# defined using space separator.
+ignoreip = <%= scope.lookupvar('fail2ban::ignoreip').flatten.join(' ') %>
+
+# "bantime" is the number of seconds that a host is banned.
+# 6H
+bantime  = 21600
+
+# A host is banned if it has generated "maxretry" during the last "findtime"
+# seconds.
+findtime = 600
+maxretry = 3
+
+# ban & send an e-mail with whois report to the destemail.
+action = %(action_mw)s
+
+#
+# JAILS
+#
+
+[ssh]
+
+enabled  = true
+port     = ssh
+filter   = sshd
+logpath  = /var/log/auth.log
+maxretry = 6
+
+# Generic filter for pam. Has to be used with action which bans all ports
+# such as iptables-allports, shorewall
+[pam-generic]
+
+enabled  = true
+# pam-generic filter can be customized to monitor specific subset of 'tty's
+filter   = pam-generic
+# port actually must be irrelevant but lets leave it all for some possible uses
+port     = all
+banaction = iptables-allports
+logpath  = /var/log/auth.log
+maxretry = 6
+
+[ssh-ddos]
+
+enabled  = true
+port     = ssh
+filter   = sshd-ddos
+logpath  = /var/log/auth.log
+maxretry = 6
+
+
+# Here we use blackhole routes for not requiring any additional kernel support
+# to store large volumes of banned IPs
+
+[ssh-route]
+
+enabled = false
+filter = sshd
+action = route
+logpath = /var/log/sshd.log
+maxretry = 6
+
+# Here we use a combination of Netfilter/Iptables and IPsets
+# for storing large volumes of banned IPs
+#
+# IPset comes in two versions. See ipset -V for which one to use
+# requires the ipset package and kernel support.
+[ssh-iptables-ipset4]
+
+enabled  = false
+port     = ssh
+filter   = sshd
+banaction = iptables-ipset-proto4
+logpath  = /var/log/sshd.log
+maxretry = 6
+
+[ssh-iptables-ipset6]
+
+enabled  = false
+port     = ssh
+filter   = sshd
+banaction = iptables-ipset-proto6
+logpath  = /var/log/sshd.log
+maxretry = 6
+
+
+#
+# HTTP servers
+#
+
+[apache]
+
+enabled  = <%= scope['fail2ban::apache_installed'] %>
+port     = http,https
+filter   = apache-auth
+logpath  = /var/log/apache*/*error*.log
+maxretry = 10
+
+[apache-badbots]
+
+enabled  = <%= scope['fail2ban::apache_installed'] %>
+port     = http,https
+filter   = apache-badbots
+logpath  = /var/log/apache*/*error*.log
+
+[apache-badreq]
+
+enabled  = <%= scope['fail2ban::apache_installed'] %>
+port     = http,https
+filter   = apache-badreq
+logpath  = /var/log/apache*/*error*.log
+
+[apache-noscript]
+
+enabled  = <%= scope['fail2ban::apache_installed'] %>
+port     = http,https
+filter   = apache-noscript
+logpath  = /var/log/apache*/*error*.log
+maxretry = 6
+
+[apache-overflows]
+
+enabled  = <%= scope['fail2ban::apache_installed'] %>
+port     = http,https
+filter   = apache-overflows
+logpath  = /var/log/apache*/*error*.log
+maxretry = 2
+
+[apache-w00tw00t]
+
+enabled  = <%= scope['fail2ban::apache_installed'] %>
+port     = http,https
+filter   = apache-w00tw00t
+action   = iptables[name=Apache-w00tw00t,port=80,protocol=tcp]
+           iptables[name=Apache-w00tw00t-Ssl,port=443,protocol=tcp]
+logpath  = /var/log/apache*/*access*.log
+maxretry = 2
+
+#
+# Mail servers
+#
+
+[postfix]
+
+enabled  = true
+port     = smtp,ssmtp,submission
+filter   = postfix
+logpath  = /var/log/mail.log
+
+
+[couriersmtp]
+
+enabled  = false
+port     = smtp,ssmtp,submission
+filter   = couriersmtp
+logpath  = /var/log/mail.log
+
+
+#
+# Mail servers authenticators: might be used for smtp,ftp,imap servers, so
+# all relevant ports get banned
+#
+
+[courierauth]
+
+enabled  = true
+port     = smtp,ssmtp,submission,imap2,imap3,imaps,pop3,pop3s
+filter   = courierlogin
+logpath  = /var/log/mail.log
+
+
+[sasl]
+
+enabled  = true
+port     = smtp,ssmtp,submission,imap2,imap3,imaps,pop3,pop3s
+filter   = postfix-sasl
+# You might consider monitoring /var/log/mail.warn instead if you are
+# running postfix since it would provide the same log lines at the
+# "warn" level but overall at the smaller filesize.
+logpath  = /var/log/mail.log
+

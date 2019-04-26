@@ -70,4 +70,15 @@ class fail2ban::config {
       File["${fail2ban::params::configuration_dir}/filter.d"]],
     notify  => Class['fail2ban::service'],
   }
+  file { "${fail2ban::params::configuration_dir}/filter.d/courierlogin.conf":
+    ensure  => present,
+    owner   => root,
+    group   => root,
+    mode    => '640',
+    source  => 'puppet:///modules/fail2ban/filter.d/courierlogin.conf',
+    require => [
+      Class['fail2ban::install'],
+      File["${fail2ban::params::configuration_dir}/filter.d"]],
+    notify  => Class['fail2ban::service'],
+  }
 }
